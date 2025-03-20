@@ -8,21 +8,24 @@ async function userCreateMiddleware(
 ) {
   const { email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({
+  if (!email || !password) {
+    res.status(400).json({
       success: false,
       msg: "Campos e-mail e senha são obrigatórios!",
     });
+    return;
+  }
 
   const user = await db.user.findUnique({
     where: { email },
   });
 
   if (user) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       msg: "Já existe uma conta cadastrada com este e-mail!",
     });
+    return;
   }
 
   next();
